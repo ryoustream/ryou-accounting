@@ -1,0 +1,26 @@
+name: 🔍 Diagnose PWA
+on:
+  workflow_dispatch: {}
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cek index.html
+        run: |
+          echo "=== HEAD https://accr.ct.ws/ ==="
+          curl -svIL --max-time 15 https://accr.ct.ws/ 2>&1 || true
+      - name: Cek manifest.json
+        run: |
+          echo "=== HEAD https://accr.ct.ws/manifest.json ==="
+          curl -svIL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 || true
+          echo "=== BODY (100 baris pertama) ==="
+          curl -sL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 | head -100 || true
+      - name: Cek service-worker.js
+        run: |
+          echo "=== HEAD https://accr.ct.ws/service-worker.js ==="
+          curl -svIL --max-time 15 https://accr.ct.ws/service-worker.js 2>&1 || true
+      - name: Cek icon-192.png
+        run: |
+          echo "=== HEAD https://accr.ct.ws/icon-192.png ==="
+          curl -svIL --max-time 15 https://accr.ct.ws/icon-192.png 2>&1 || true
