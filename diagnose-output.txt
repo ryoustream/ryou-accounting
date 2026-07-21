@@ -18,7 +18,7 @@
 * TLSv1.3 (IN), TLS handshake, Certificate (11):
 { [2580 bytes data]
 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
-{ [80 bytes data]
+{ [78 bytes data]
 * TLSv1.3 (IN), TLS handshake, Finished (20):
 { [52 bytes data]
 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
@@ -48,7 +48,7 @@
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
 { [265 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [265 bytes data]
+{ [281 bytes data]
 * old SSL session ID is stale, removing
 * Empty reply from server
 * Closing connection
@@ -76,7 +76,7 @@
 * TLSv1.3 (IN), TLS handshake, Certificate (11):
 { [2580 bytes data]
 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
-{ [79 bytes data]
+{ [80 bytes data]
 * TLSv1.3 (IN), TLS handshake, Finished (20):
 { [52 bytes data]
 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
@@ -104,9 +104,9 @@
 > 
 { [5 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [281 bytes data]
+{ [265 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [281 bytes data]
+{ [265 bytes data]
 * old SSL session ID is stale, removing
 * Empty reply from server
 * Closing connection
@@ -136,7 +136,7 @@
 * TLSv1.3 (IN), TLS handshake, Certificate (11):
 { [2580 bytes data]
 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
-{ [79 bytes data]
+{ [80 bytes data]
 * TLSv1.3 (IN), TLS handshake, Finished (20):
 { [52 bytes data]
 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
@@ -164,9 +164,9 @@
 > 
 { [5 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [265 bytes data]
-* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
 { [281 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [265 bytes data]
 * old SSL session ID is stale, removing
 * Empty reply from server
 * Closing connection
@@ -194,7 +194,7 @@
 * TLSv1.3 (IN), TLS handshake, Certificate (11):
 { [2580 bytes data]
 * TLSv1.3 (IN), TLS handshake, CERT verify (15):
-{ [78 bytes data]
+{ [79 bytes data]
 * TLSv1.3 (IN), TLS handshake, Finished (20):
 { [52 bytes data]
 * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
@@ -222,7 +222,7 @@
 > 
 { [5 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [265 bytes data]
+{ [281 bytes data]
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
 { [281 bytes data]
 * old SSL session ID is stale, removing
