@@ -11,7 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Cek endpoint & tulis hasil
+        continue-on-error: true
         run: |
+          set +e
           {
             echo "=== HEAD https://accr.ct.ws/ ==="
             curl -svIL --max-time 15 https://accr.ct.ws/ 2>&1
@@ -19,7 +21,7 @@ jobs:
             echo "=== HEAD https://accr.ct.ws/manifest.json ==="
             curl -svIL --max-time 15 https://accr.ct.ws/manifest.json 2>&1
             echo ""
-            echo "=== BODY https://accr.ct.ws/manifest.json (200 char) ==="
+            echo "=== BODY https://accr.ct.ws/manifest.json (500 char) ==="
             curl -sL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 | head -c 500
             echo ""
             echo "=== HEAD https://accr.ct.ws/service-worker.js ==="
@@ -28,7 +30,9 @@ jobs:
             echo "=== HEAD https://accr.ct.ws/icon-192.png ==="
             curl -svIL --max-time 15 https://accr.ct.ws/icon-192.png 2>&1
           } > diagnose-output.txt 2>&1
+          exit 0
       - name: Commit hasil diagnostik
+        if: always()
         run: |
           git config user.name "diagnose-bot"
           git config user.email "actions@github.com"
