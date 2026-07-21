@@ -2,25 +2,36 @@ name: 🔍 Diagnose PWA
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   diagnose:
     runs-on: ubuntu-latest
     steps:
-      - name: Cek index.html
+      - uses: actions/checkout@v4
+      - name: Cek endpoint & tulis hasil
         run: |
-          echo "=== HEAD https://accr.ct.ws/ ==="
-          curl -svIL --max-time 15 https://accr.ct.ws/ 2>&1 || true
-      - name: Cek manifest.json
+          {
+            echo "=== HEAD https://accr.ct.ws/ ==="
+            curl -svIL --max-time 15 https://accr.ct.ws/ 2>&1
+            echo ""
+            echo "=== HEAD https://accr.ct.ws/manifest.json ==="
+            curl -svIL --max-time 15 https://accr.ct.ws/manifest.json 2>&1
+            echo ""
+            echo "=== BODY https://accr.ct.ws/manifest.json (200 char) ==="
+            curl -sL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 | head -c 500
+            echo ""
+            echo "=== HEAD https://accr.ct.ws/service-worker.js ==="
+            curl -svIL --max-time 15 https://accr.ct.ws/service-worker.js 2>&1
+            echo ""
+            echo "=== HEAD https://accr.ct.ws/icon-192.png ==="
+            curl -svIL --max-time 15 https://accr.ct.ws/icon-192.png 2>&1
+          } > diagnose-output.txt 2>&1
+      - name: Commit hasil diagnostik
         run: |
-          echo "=== HEAD https://accr.ct.ws/manifest.json ==="
-          curl -svIL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 || true
-          echo "=== BODY (100 baris pertama) ==="
-          curl -sL --max-time 15 https://accr.ct.ws/manifest.json 2>&1 | head -100 || true
-      - name: Cek service-worker.js
-        run: |
-          echo "=== HEAD https://accr.ct.ws/service-worker.js ==="
-          curl -svIL --max-time 15 https://accr.ct.ws/service-worker.js 2>&1 || true
-      - name: Cek icon-192.png
-        run: |
-          echo "=== HEAD https://accr.ct.ws/icon-192.png ==="
-          curl -svIL --max-time 15 https://accr.ct.ws/icon-192.png 2>&1 || true
+          git config user.name "diagnose-bot"
+          git config user.email "actions@github.com"
+          git add diagnose-output.txt
+          git commit -m "diagnose output [skip ci]" || echo "no changes"
+          git push
