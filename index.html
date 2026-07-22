@@ -4049,6 +4049,19 @@ async function renderSettingsPage(root){
 
   root.innerHTML=`
     <div class="settings-section">
+      <h4>Instalasi Aplikasi</h4>
+      <div class="settings-row" style="align-items:center;">
+        <div>
+          <label>Pasang ke HP / PC</label>
+          <div class="sr-sub" id="install-app-sub">Biar bisa dibuka langsung dari layar utama, tanpa lewat browser.</div>
+        </div>
+        <button type="button" class="fx-refresh-btn" id="install-app-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Install
+        </button>
+      </div>
+    </div>
+    <div class="settings-section">
       <h4>Profil Usaha</h4>
       <div class="settings-row">
         <div><label>Nama Toko / Usaha</label><div class="sr-sub">Tampil di nota cetak</div></div>
@@ -4165,7 +4178,7 @@ async function renderSettingsPage(root){
       <div class="about-top">
         <div class="about-logo">RA</div>
         <div>
-          <div class="about-name">Ryou Accounting<span class="about-ver">v1.3-r4</span></div>
+          <div class="about-name">Ryou Accounting<span class="about-ver">v1.3-r5</span></div>
           <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
         </div>
       </div>
@@ -4188,6 +4201,8 @@ async function renderSettingsPage(root){
   `;
 
   root.querySelector("#fx-refresh-btn").addEventListener("click", () => fetchLatestFxRates(true));
+  renderInstallButtonState(root);
+  root.querySelector("#install-app-btn").addEventListener("click", triggerInstallPrompt);
 
   root.querySelector("#cfg-save").addEventListener("click",async()=>{
     await saveSetting("tokoNama",  root.querySelector("#cfg-tokoNama").value.trim());
@@ -4646,6 +4661,56 @@ if("serviceWorker" in navigator){
     navigator.serviceWorker.register("service-worker.js")
       .catch(err => console.error("Registrasi service worker gagal:", err));
   });
+}
+
+/* Tombol "Install" manual di Settings — nangkep event beforeinstallprompt
+   Chrome/Edge supaya pengguna nggak perlu nyari sendiri di menu ⋮ browser.
+   Kalau event ini belum/nggak pernah muncul (kriteria PWA belum terpenuhi,
+   atau browser-nya nggak dukung kayak Safari), tombol tetap ada tapi
+   nunjukin instruksi manual pas ditekan. */
+let deferredInstallPrompt = null;
+let appAlreadyInstalled = window.matchMedia("(display-mode: standalone)").matches;
+window.addEventListener("beforeinstallprompt", (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  renderInstallButtonState();
+});
+window.addEventListener("appinstalled", ()=>{
+  deferredInstallPrompt = null;
+  appAlreadyInstalled = true;
+  renderInstallButtonState();
+  toast("Aplikasi berhasil di-install.");
+});
+function renderInstallButtonState(root){
+  const scope = root || document;
+  const btn = scope.querySelector("#install-app-btn");
+  const sub = scope.querySelector("#install-app-sub");
+  if(!btn) return;
+  if(appAlreadyInstalled){
+    btn.querySelector("svg").outerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    btn.lastChild.textContent = " Terinstall";
+    btn.disabled = true;
+    if(sub) sub.textContent = "Aplikasi sudah terpasang di perangkat ini.";
+  }else if(deferredInstallPrompt){
+    if(sub) sub.textContent = "Siap dipasang — tinggal tap tombol di samping.";
+  }
+}
+async function triggerInstallPrompt(){
+  if(appAlreadyInstalled) return;
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    return;
+  }
+  const ua = navigator.userAgent || "";
+  if(/iphone|ipad|ipod/i.test(ua)){
+    toast('Di iPhone/iPad: tap ikon Share di Safari, lalu pilih "Add to Home Screen".');
+  }else if(/android/i.test(ua)){
+    toast('Belum terdeteksi installable otomatis. Coba tap menu ⋮ Chrome → "Install app". Kalau nggak ada, refresh halaman ini dulu.');
+  }else{
+    toast('Buka menu browser (biasanya ikon ⋮ atau ⊕ di address bar) → cari "Install [App]" atau "Create shortcut".');
+  }
 }
 </script>
 </body>

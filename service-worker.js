@@ -3,7 +3,7 @@
    Naikkan CACHE_NAME tiap kali index.html di-update & re-upload, supaya
    pengguna lama otomatis dapat versi baru saat online (versi lama tetap
    dipakai sebagai fallback kalau lagi offline). */
-const CACHE_NAME = "ryou-accounting-v1.3.4";
+const CACHE_NAME = "ryou-accounting-v1.3.5";
 const APP_SHELL = [
   "./",
   "./index.html",
