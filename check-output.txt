@@ -1,0 +1,4 @@
+=== github.io URL ===
+HTTP_CODE:301 REDIRECT_URL:http://accr.ct.ws/
+=== manifest via github.io ===
+HTTP_CODE:301 CONTENT_TYPE:text/html
