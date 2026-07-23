@@ -49,6 +49,7 @@
   --text-soft:var(--ink-700);
   --border:var(--line);
   --primary-ink:var(--primary-600);
+  --density-scale:1;
 }
 html[data-theme="dark"]{
   --bg:#101513;
@@ -67,7 +68,19 @@ html[data-theme="dark"]{
   --shadow-1:0 1px 2px rgba(0,0,0,0.35), 0 1px 1px rgba(0,0,0,0.22);
   --shadow-2:0 10px 28px rgba(0,0,0,0.55), 0 3px 10px rgba(0,0,0,0.4);
 }
-*{box-sizing:border-box;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{-webkit-tap-highlight-color:transparent;}
+button,a,.icon-btn,.act-icon,.nav-item,.bn-item,.fab,.tab-item,
+.currency-card,.radio-pill,input,select,textarea,[onclick],[role="button"]{
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+}
+button:active,.icon-btn:active,.act-icon:active,.nav-item:active,.bn-item:active,
+.tab-item:active,.crud-row:active,.ks-suggest-item:active{
+  background:var(--surface-2);
+}
+.fab:active{background:var(--primary-600);}
+.btn-primary:active{background:var(--primary-600);}
 html,body{height:100%;}
 body{
   margin:0;
@@ -199,7 +212,7 @@ html[data-theme="dark"] .nav-item.active{color:#8fd4c0;}
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--radius-md);
-  padding:16px 16px 14px;
+  padding:calc(16px * var(--density-scale,1)) calc(16px * var(--density-scale,1)) calc(14px * var(--density-scale,1));
   position:relative;
   overflow:hidden;
   box-shadow:var(--shadow-1);
@@ -214,13 +227,14 @@ html[data-theme="dark"] .nav-item.active{color:#8fd4c0;}
 .stat-card.acc-blue{--accent:var(--blue);}
 .stat-label{font-size:11.5px;color:var(--text-soft);font-weight:600;letter-spacing:.02em;}
 .stat-value{font-size:21px;font-weight:700;margin-top:6px;letter-spacing:-.3px;}
+.money-sub{display:block;font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:0;margin-top:1px;}
 .stat-foot{font-size:11px;color:var(--text-soft);margin-top:4px;}
 
 .section{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--radius-md);
-  padding:18px;
+  padding:calc(18px * var(--density-scale,1));
   margin-bottom:16px;
 }
 .section-head{display:flex;align-items:center;justify-content:between;justify-content:space-between;margin-bottom:12px;}
@@ -522,6 +536,29 @@ html[data-theme="dark"] .tag-chip{color:#8fd4c0;}
 }
 .backup-card h4{margin:0;font-size:14px;font-weight:700;}
 .backup-card p{margin:0;font-size:12px;color:var(--text-soft);line-height:1.5;}
+
+/* ---- Gaya kartu (Pengaturan Aplikasi): flat / border / shadow ---- */
+html.card-style-flat .stat-card,
+html.card-style-flat .section,
+html.card-style-flat .report-card,
+html.card-style-flat .backup-card,
+html.card-style-flat .settings-section{
+  box-shadow:none;border-color:transparent;
+}
+html.card-style-border .stat-card,
+html.card-style-border .section,
+html.card-style-border .report-card,
+html.card-style-border .backup-card,
+html.card-style-border .settings-section{
+  box-shadow:none;border-color:var(--border);
+}
+html.card-style-shadow .stat-card,
+html.card-style-shadow .section,
+html.card-style-shadow .report-card,
+html.card-style-shadow .backup-card,
+html.card-style-shadow .settings-section{
+  box-shadow:var(--shadow-1);border-color:var(--border);
+}
 .bk-stats-card{
   display:flex;align-items:center;gap:14px;background:linear-gradient(155deg,var(--surface-2),var(--surface));
   border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:22px;
@@ -548,10 +585,10 @@ html[data-theme="dark"] .tag-chip{color:#8fd4c0;}
 
 /* Settings */
 .settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:14px;overflow:hidden;}
-.settings-section h4{margin:0;padding:14px 16px;font-size:13px;font-weight:700;background:var(--surface-2);border-bottom:1px solid var(--border);}
+.settings-section h4{margin:0;padding:calc(14px * var(--density-scale,1)) 16px;font-size:13px;font-weight:700;background:var(--surface-2);border-bottom:1px solid var(--border);}
 .settings-row{
   display:flex;align-items:center;justify-content:space-between;
-  padding:13px 16px;border-bottom:1px solid var(--border);gap:16px;
+  padding:calc(13px * var(--density-scale,1)) 16px;border-bottom:1px solid var(--border);gap:16px;
 }
 .settings-row:last-child{border-bottom:none;}
 .settings-row label{font-size:13px;font-weight:600;}
@@ -579,6 +616,24 @@ html[data-theme="dark"] .tag-chip{color:#8fd4c0;}
 .settings-subhead .sr-sub{font-size:11.5px;color:var(--text-soft);margin-top:2px;}
 .settings-note{padding:2px 16px 14px;font-size:11px;color:var(--text-soft);line-height:1.5;}
 .currency-select-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:2px 16px 16px;}
+
+/* ---- Warna Tema: swatch grid (Pengaturan Aplikasi) ---- */
+.accent-swatch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:2px 16px 16px;}
+.accent-swatch{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  border:1.5px solid var(--border);border-radius:var(--radius-md);
+  padding:12px 4px;cursor:pointer;background:var(--bg);text-align:center;
+}
+.accent-swatch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;}
+.accent-swatch .swatch-dot{width:26px;height:26px;border-radius:50%;background:var(--swatch-color);border:2px solid rgba(0,0,0,.08);flex-shrink:0;}
+.accent-swatch .swatch-label{font-size:11px;font-weight:600;color:var(--text-soft);}
+.accent-swatch.selected{border-color:var(--swatch-color);}
+.accent-swatch.selected .swatch-dot{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--swatch-color);}
+.accent-swatch.selected .swatch-label{color:var(--text);}
+input[type="color"]{
+  width:52px;height:36px;padding:2px;border-radius:8px;
+  border:1px solid var(--border);cursor:pointer;background:var(--bg);
+}
 .currency-card{
   position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   border:1.5px solid var(--border);border-radius:var(--radius-md);
@@ -730,7 +785,12 @@ input[list]::-webkit-calendar-picker-indicator{opacity:.4;}
 .nav-drawer .sidebar-foot{
   padding:12px 14px calc(14px + env(safe-area-inset-bottom));
   border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;flex-direction:column;align-items:stretch;gap:8px;
+}
+.drawer-fx-ref{
+  font-size:10.5px;font-weight:700;color:var(--text-soft);
+  background:var(--surface-2);border-radius:8px;
+  padding:7px 10px;text-align:center;letter-spacing:.01em;
 }
 .nav-drawer .nav-scroll::-webkit-scrollbar{width:4px;}
 .nav-drawer .nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
@@ -916,6 +976,7 @@ body::-webkit-scrollbar{display:none;}
   </div>
   <nav class="nav-scroll" id="drawer-nav-scroll"></nav>
   <div class="sidebar-foot">
+    <div class="drawer-fx-ref" id="drawer-fx-ref"></div>
     <button class="theme-toggle" id="theme-toggle-drawer">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       <span id="theme-label-drawer">Terang</span>
@@ -1077,6 +1138,20 @@ async function loadCurrencySettings(){
     const uCfg = await dbGet("settings","fxRatesUpdatedAt");
     if(uCfg && uCfg.value) FX_RATES_UPDATED_AT = uCfg.value;
   }catch(e){ /* DB belum siap / settings kosong — pakai default */ }
+  renderDrawerFxRef();
+}
+/* Referensi kurs aktif yang tampil di menu (drawer mobile) — biar kelihatan
+   tanpa harus buka Pengaturan dulu. */
+function renderDrawerFxRef(){
+  const el = document.getElementById("drawer-fx-ref");
+  if(!el) return;
+  if(CURRENT_CURRENCY === "IDR"){
+    el.textContent = "Mata uang: Rupiah (IDR)";
+  }else{
+    const rate = FX_RATES[CURRENT_CURRENCY] || 1;
+    const rateStr = "Rp" + Math.round(rate).toLocaleString("id-ID");
+    el.textContent = `Kurs aktif: 1 ${CURRENT_CURRENCY} = ${rateStr}`;
+  }
 }
 /* Ambil kurs terbaru dari exchangerate-api.com (open access, gratis, tanpa
    API key) — hanya dipanggil saat perangkat online; kalau gagal/offline,
@@ -1108,6 +1183,7 @@ async function fetchLatestFxRates(manual){
     FX_RATES_UPDATED_AT = new Date().toISOString();
     await dbPut("settings", { key:"fxRates", value:newRates });
     await dbPut("settings", { key:"fxRatesUpdatedAt", value:FX_RATES_UPDATED_AT });
+    renderDrawerFxRef();
     if(manual){
       toast("Kurs berhasil diperbarui.");
       if(location.hash.replace("#","") === "settings") navigateTo("settings");
@@ -1129,6 +1205,15 @@ function fmtIDR(n){
   const rate = CURRENT_CURRENCY === "IDR" ? 1 : (FX_RATES[CURRENT_CURRENCY] || 1);
   const converted = n / rate;
   return meta.symbol + converted.toLocaleString(meta.locale, {minimumFractionDigits:meta.decimals, maximumFractionDigits:meta.decimals});
+}
+/* Versi HTML fmtIDR — buat angka "headline" (stat card, total besar). Kalau mata
+   uang aktif bukan IDR, kasih baris kecil abu-abu di bawahnya nunjukin nilai
+   Rupiah asli, karena ini aplikasi UMKM Indonesia dan Rupiah tetap acuan utama. */
+function fmtIDRHtml(n){
+  const main = fmtIDR(n);
+  if(CURRENT_CURRENCY === "IDR") return main;
+  const idr = CURRENCY_META.IDR.symbol + (Number(n)||0).toLocaleString("id-ID",{maximumFractionDigits:0});
+  return `${main}<span class="money-sub">${idr}</span>`;
 }
 function todayStr(){
   const d = new Date();
@@ -1237,6 +1322,7 @@ function applyTheme(mode){
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if(metaTheme) metaTheme.setAttribute("content", mode === "dark" ? "#181f1c" : "#2f6f62");
   localStorage.setItem("ryou_theme", mode);
+  applyAppTheme();
 }
 function initTheme(){
   const saved = localStorage.getItem("ryou_theme");
@@ -1250,6 +1336,113 @@ function toggleTheme(){
 document.getElementById("theme-toggle-desktop").addEventListener("click", toggleTheme);
 document.getElementById("theme-toggle-mobile").addEventListener("click", toggleTheme);
 document.getElementById("theme-toggle-drawer").addEventListener("click", toggleTheme);
+
+/* ---------- 3b. PENGATURAN APLIKASI — warna aksen, bentuk, kepadatan, ukuran font ---------- */
+function hexToHsl(hex){
+  hex = (hex||"#2f6f62").replace("#","");
+  if(hex.length===3) hex = hex.split("").map(c=>c+c).join("");
+  const r = parseInt(hex.slice(0,2),16)/255, g = parseInt(hex.slice(2,4),16)/255, b = parseInt(hex.slice(4,6),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h,s; const l = (max+min)/2;
+  if(max===min){ h=s=0; }
+  else{
+    const d = max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d+(g<b?6:0); break;
+      case g: h=(b-r)/d+2; break;
+      default: h=(r-g)/d+4;
+    }
+    h/=6;
+  }
+  return [h*360, s*100, l*100];
+}
+function hslToHex(h,s,l){
+  h=((h%360)+360)%360; h/=360; s=clampN(s,0,100)/100; l=clampN(l,0,100)/100;
+  let r,g,b;
+  if(s===0){ r=g=b=l; }
+  else{
+    const hue2rgb=(p,q,t)=>{
+      if(t<0) t+=1; if(t>1) t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q = l<0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    r = hue2rgb(p,q,h+1/3); g = hue2rgb(p,q,h); b = hue2rgb(p,q,h-1/3);
+  }
+  const toHex = x => Math.round(clampN(x,0,1)*255).toString(16).padStart(2,"0");
+  return "#"+toHex(r)+toHex(g)+toHex(b);
+}
+function clampN(n,min,max){ return Math.max(min,Math.min(max,n)); }
+
+const ACCENT_PRESETS = [
+  { key:"teal",   label:"Teal",        hex:"#2f6f62" },
+  { key:"blue",   label:"Biru",        hex:"#2563a8" },
+  { key:"purple", label:"Ungu",        hex:"#6b46a8" },
+  { key:"rose",   label:"Merah Muda",  hex:"#b8395f" },
+  { key:"amber",  label:"Oranye",      hex:"#b8722e" },
+  { key:"green",  label:"Hijau",       hex:"#3f8a4a" }
+];
+const RADIUS_PRESETS = {
+  sharp:   { label:"Kotak / Tajam", sm:2,  md:4,  lg:6  },
+  medium:  { label:"Sedang",        sm:6,  md:10, lg:14 },
+  rounded: { label:"Membulat",      sm:11, md:18, lg:24 }
+};
+const DENSITY_PRESETS = {
+  compact:     { label:"Ringkas", scale:0.78 },
+  comfortable: { label:"Nyaman",  scale:1 },
+  spacious:    { label:"Lega",    scale:1.28 }
+};
+const CARD_STYLE_PRESETS = {
+  flat:   { label:"Flat (polos)" },
+  border: { label:"Border" },
+  shadow: { label:"Shadow" }
+};
+const FONT_SIZE_PRESETS = {
+  small:  { label:"Kecil",  zoom:0.92 },
+  medium: { label:"Sedang", zoom:1 },
+  large:  { label:"Besar",  zoom:1.12 }
+};
+
+let APP_THEME = { accent:"#2f6f62", radius:"medium", density:"comfortable", cardStyle:"shadow", fontSize:"medium" };
+
+function applyAppTheme(){
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const [h,s,l] = hexToHsl(APP_THEME.accent);
+  const root = document.documentElement.style;
+  root.setProperty("--primary", APP_THEME.accent);
+  root.setProperty("--primary-600", hslToHex(h, s, isDark ? 55 : clampN(l-12,10,88)));
+  root.setProperty("--primary-100", isDark ? hslToHex(h, clampN(s,20,45), 16) : hslToHex(h, clampN(s,15,55), 92));
+  root.setProperty("--primary-ink", isDark ? hslToHex(h, clampN(s+5,20,70), 74) : hslToHex(h, s, clampN(l-12,10,88)));
+
+  const rad = RADIUS_PRESETS[APP_THEME.radius] || RADIUS_PRESETS.medium;
+  root.setProperty("--radius-sm", rad.sm+"px");
+  root.setProperty("--radius-md", rad.md+"px");
+  root.setProperty("--radius-lg", rad.lg+"px");
+
+  root.setProperty("--density-scale", (DENSITY_PRESETS[APP_THEME.density]||DENSITY_PRESETS.comfortable).scale);
+
+  document.documentElement.classList.remove("card-style-flat","card-style-border","card-style-shadow");
+  document.documentElement.classList.add("card-style-"+(CARD_STYLE_PRESETS[APP_THEME.cardStyle]?APP_THEME.cardStyle:"shadow"));
+
+  document.body.style.zoom = (FONT_SIZE_PRESETS[APP_THEME.fontSize]||FONT_SIZE_PRESETS.medium).zoom;
+}
+async function loadAppThemeSettings(){
+  try{
+    const [accent, radius, density, cardStyle, fontSize] = await Promise.all(
+      ["appAccent","appRadius","appDensity","appCardStyle","appFontSize"].map(k=>dbGet("settings",k))
+    );
+    if(accent && accent.value) APP_THEME.accent = accent.value;
+    if(radius && radius.value && RADIUS_PRESETS[radius.value]) APP_THEME.radius = radius.value;
+    if(density && density.value && DENSITY_PRESETS[density.value]) APP_THEME.density = density.value;
+    if(cardStyle && cardStyle.value && CARD_STYLE_PRESETS[cardStyle.value]) APP_THEME.cardStyle = cardStyle.value;
+    if(fontSize && fontSize.value && FONT_SIZE_PRESETS[fontSize.value]) APP_THEME.fontSize = fontSize.value;
+  }catch(e){ /* pakai default */ }
+  applyAppTheme();
+}
 
 /* ---------- 3b. DRAWER ---------- */
 function openDrawer(){
@@ -1281,6 +1474,7 @@ const ICONS = {
   reports: '<path d="M4 19V9M10 19V4M16 19v-7M22 19H2"/>',
   backup: '<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.97 7.97 0 0 0 0-2l2-1.6-2-3.4-2.4 1a8 8 0 0 0-1.7-1L15 3h-6l-.3 2.6a8 8 0 0 0-1.7 1l-2.4-1-2 3.4L4.6 11a7.97 7.97 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a8 8 0 0 0 1.7 1L9 21h6l.3-2.6a8 8 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6z"/>',
+  appsettings: '<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="6.5" cy="11.5" r="1.5"/><circle cx="9.5" cy="7.5" r="1.5"/><circle cx="14.5" cy="7.5" r="1.5"/><circle cx="17.5" cy="11.5" r="1.5"/>',
   kasir: '<rect x="2.5" y="8" width="19" height="12" rx="1.5"/><path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/><path d="M7 13h3M7 16.5h6"/><circle cx="17" cy="15" r="2"/>',
   barcode: '<path d="M4 4v16M8 4v16M11 4v16M15 4v16M18 4v10M21 4v16"/>',
   upload: '<path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M4 5h16"/>',
@@ -1313,7 +1507,8 @@ const NAV_GROUPS = [
   { label:"Lainnya", items:[
     { id:"reports", label:"Laporan", icon:"reports" },
     { id:"backup", label:"Backup Data", icon:"backup" },
-    { id:"settings", label:"Pengaturan", icon:"settings" }
+    { id:"settings", label:"Pengaturan Akun", icon:"settings" },
+    { id:"appsettings", label:"Pengaturan Aplikasi", icon:"appsettings" }
   ]}
 ];
 /* Bottom nav: subset paling sering dipakai (5 slot) */
@@ -1397,7 +1592,8 @@ const PAGE_SUBS = {
   payables:"Daftar hutang ke supplier",
   reports:"Laporan penjualan, kas & laba rugi",
   backup:"Export / import & backup data",
-  settings:"Pengaturan aplikasi",
+  settings:"Profil usaha, mata uang & kasir",
+  appsettings:"Warna tema, bentuk & ukuran font",
   kasir:"Checkout cepat via scan barcode"
 };
 
@@ -2242,7 +2438,7 @@ function makeTransaksiPage(type){
         </div>
         <div class="field"><label>Catatan</label><textarea id="f-catatan" rows="2">${isEdit?(existing.catatan||''):''}</textarea></div>
         ${isEdit?`<div class="field-hint" style="margin-top:-6px;">Nota bisa diedit sampai 3 hari sejak dibuat. Mengubah item/metode akan menyesuaikan ulang stok, kas, dan hutang/piutang secara otomatis.</div>`:""}
-        <div style="text-align:right;font-size:13px;font-weight:700;">Total: <span id="f-total-display" class="num">${fmtIDR(0)}</span></div>
+        <div style="text-align:right;font-size:13px;font-weight:700;">Total: <span id="f-total-display" class="num">${fmtIDRHtml(0)}</span></div>
       `;
       const modal = openModal(isEdit?`Edit ${title} — ${existing.nomorNota}`:`Tambah ${title}`, bodyHtml,
         `<button class="btn" id="modal-cancel">Batal</button><button class="btn btn-primary" id="modal-save">Simpan</button>`
@@ -2297,7 +2493,7 @@ function makeTransaksiPage(type){
         const sub = items.reduce((a,it)=>a+it.subtotal,0);
         const disc= Number(modal.querySelector("#f-diskon").value)||0;
         const tax = Number(modal.querySelector("#f-pajak").value)||0;
-        modal.querySelector("#f-total-display").textContent = fmtIDR(sub - disc + tax);
+        modal.querySelector("#f-total-display").innerHTML = fmtIDRHtml(sub - disc + tax);
       }
       modal.querySelector("#add-item-btn").addEventListener("click",()=>{
         items.push({nama:"",qty:1,harga:0,subtotal:0});
@@ -2459,9 +2655,9 @@ async function renderCashPage(root){
     const keluar = rows.filter(r=>r.tipe==="keluar").reduce((a,b)=>a+Number(b.jumlah||0),0);
     const saldo  = allEntries.reduce((a,b)=>a + (b.tipe==="masuk"?1:-1)*Number(b.jumlah||0),0);
     root.querySelector("#kas-stats").innerHTML=`
-      <div class="stat-card"><div class="stat-label">Kas Masuk (filter)</div><div class="stat-value num" style="color:var(--primary)">${fmtIDR(masuk)}</div></div>
-      <div class="stat-card acc-red"><div class="stat-label">Kas Keluar (filter)</div><div class="stat-value num">${fmtIDR(keluar)}</div></div>
-      <div class="stat-card acc-amber"><div class="stat-label">Saldo Kas (total)</div><div class="stat-value num">${fmtIDR(saldo)}</div></div>
+      <div class="stat-card"><div class="stat-label">Kas Masuk (filter)</div><div class="stat-value num" style="color:var(--primary)">${fmtIDRHtml(masuk)}</div></div>
+      <div class="stat-card acc-red"><div class="stat-label">Kas Keluar (filter)</div><div class="stat-value num">${fmtIDRHtml(keluar)}</div></div>
+      <div class="stat-card acc-amber"><div class="stat-label">Saldo Kas (total)</div><div class="stat-value num">${fmtIDRHtml(saldo)}</div></div>
     `;
   }
 
@@ -2717,7 +2913,7 @@ async function renderBankPage(root){
     if(!rows.length){
       holder.innerHTML=`
         <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-          <div class="stat-card" style="flex:1;min-width:140px;"><div class="stat-label">Saldo Rekening</div><div class="stat-value num" style="font-size:18px;">${fmtIDR(saldoAcc)}</div></div>
+          <div class="stat-card" style="flex:1;min-width:140px;"><div class="stat-label">Saldo Rekening</div><div class="stat-value num" style="font-size:18px;">${fmtIDRHtml(saldoAcc)}</div></div>
         </div>
         <div class="empty-state" style="border:1px dashed var(--border);border-radius:var(--radius-md);padding:30px;">${iconSvg("bank")}<div class="et-title">Belum ada mutasi</div></div>`;
       return;
@@ -2732,9 +2928,9 @@ async function renderBankPage(root){
 
     holder.innerHTML=`
       <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-        <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-label">Saldo</div><div class="stat-value num" style="font-size:18px;color:var(--amber)">${fmtIDR(saldoAcc)}</div></div>
-        <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-label">Masuk (filter)</div><div class="stat-value num" style="font-size:18px;color:var(--primary)">${fmtIDR(masuk)}</div></div>
-        <div class="stat-card acc-red" style="flex:1;min-width:120px;"><div class="stat-label">Keluar (filter)</div><div class="stat-value num" style="font-size:18px;">${fmtIDR(keluar)}</div></div>
+        <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-label">Saldo</div><div class="stat-value num" style="font-size:18px;color:var(--amber)">${fmtIDRHtml(saldoAcc)}</div></div>
+        <div class="stat-card" style="flex:1;min-width:120px;"><div class="stat-label">Masuk (filter)</div><div class="stat-value num" style="font-size:18px;color:var(--primary)">${fmtIDRHtml(masuk)}</div></div>
+        <div class="stat-card acc-red" style="flex:1;min-width:120px;"><div class="stat-label">Keluar (filter)</div><div class="stat-value num" style="font-size:18px;">${fmtIDRHtml(keluar)}</div></div>
       </div>
       <div class="table-wrap">
         <table class="data-table">
@@ -2974,9 +3170,9 @@ function makeDebtPage(type){
       const totalLunas=rows.filter(r=>r.status==="lunas").reduce((a,b)=>a+Number(b.total||0),0);
       const overdue=rows.filter(r=>isOverdue(r)).length;
       root.querySelector("#debt-stats").innerHTML=`
-        <div class="stat-card acc-amber"><div class="stat-label">${title} Aktif</div><div class="stat-value num">${fmtIDR(totalAktif)}</div></div>
+        <div class="stat-card acc-amber"><div class="stat-label">${title} Aktif</div><div class="stat-value num">${fmtIDRHtml(totalAktif)}</div></div>
         <div class="stat-card acc-red"><div class="stat-label">Jatuh Tempo (lama)</div><div class="stat-value num">${overdue} tagihan</div></div>
-        <div class="stat-card"><div class="stat-label">${title} Lunas</div><div class="stat-value num">${fmtIDR(totalLunas)}</div></div>
+        <div class="stat-card"><div class="stat-label">${title} Lunas</div><div class="stat-value num">${fmtIDRHtml(totalLunas)}</div></div>
       `;
     }
 
@@ -3418,7 +3614,7 @@ async function renderStatementMode(root, cfg){
         </table>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:13px;font-weight:700;">Dipilih: <span id="stmt-sel-count">0</span> nota &middot; Total: <span id="stmt-sel-total" class="num">${fmtIDR(0)}</span></div>
+        <div style="font-size:13px;font-weight:700;">Dipilih: <span id="stmt-sel-count">0</span> nota &middot; Total: <span id="stmt-sel-total" class="num">${fmtIDRHtml(0)}</span></div>
         <button class="btn btn-primary" id="stmt-create-btn" disabled>${editingStatement?"Simpan Perubahan":"+ Buat Invoice Statement"}</button>
       </div>
     `;
@@ -3434,7 +3630,7 @@ async function renderStatementMode(root, cfg){
       const checked = checks().filter(c=>c.checked);
       const total = checked.reduce((a,c)=>a+Number(selectable.find(r=>r.id===Number(c.dataset.id))?.sisa||0),0);
       holder.querySelector("#stmt-sel-count").textContent = checked.length;
-      holder.querySelector("#stmt-sel-total").textContent = fmtIDR(total);
+      holder.querySelector("#stmt-sel-total").innerHTML = fmtIDRHtml(total);
       holder.querySelector("#stmt-create-btn").disabled = checked.length===0;
       syncAllCkState();
     }
@@ -4178,8 +4374,9 @@ async function renderSettingsPage(root){
       <div class="about-top">
         <div class="about-logo">RA</div>
         <div>
-          <div class="about-name">Ryou Accounting<span class="about-ver">v1.3-r5</span></div>
+          <div class="about-name">Ryou Accounting<span class="about-ver">v2.0-r6</span></div>
           <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0200R6</div>
         </div>
       </div>
       <div class="about-feats">
@@ -4242,6 +4439,7 @@ async function renderSettingsPage(root){
     await saveSetting("fxRates", newRates);
     CURRENT_CURRENCY = newCurrency;
     FX_RATES = newRates;
+    renderDrawerFxRef();
 
     /* --- Kasir & Cetak Nota --- */
     await saveSetting("kasirEnabled", root.querySelector("#cfg-kasirEnabled").checked);
@@ -4259,6 +4457,103 @@ async function renderSettingsPage(root){
    KASIR — checkout cepat via scan barcode (opsional, aktif dari Pengaturan)
    Setiap penjualan yang selesai langsung "reset" siap utk nota berikutnya.
    ================================================================ */
+async function renderAppSettingsPage(root){
+  root.innerHTML = `
+    <div class="settings-section">
+      <h4>Warna Tema</h4>
+      <div class="settings-subhead">
+        <div><label>Preset Warna</label><div class="sr-sub">Tap salah satu, atau pilih warna custom di bawah</div></div>
+      </div>
+      <div class="accent-swatch-grid">
+        ${ACCENT_PRESETS.map(p => `
+          <label class="accent-swatch${APP_THEME.accent.toLowerCase()===p.hex.toLowerCase()?" selected":""}" style="--swatch-color:${p.hex}">
+            <input type="radio" name="app-accent" value="${p.hex}" ${APP_THEME.accent.toLowerCase()===p.hex.toLowerCase()?"checked":""}>
+            <span class="swatch-dot"></span>
+            <span class="swatch-label">${p.label}</span>
+          </label>`).join("")}
+      </div>
+      <div class="settings-row">
+        <div><label>Warna Custom</label><div class="sr-sub">Bebas pilih warna apa aja</div></div>
+        <input type="color" id="app-accent-custom" value="${APP_THEME.accent}">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>Bentuk &amp; Gaya</h4>
+      <div class="settings-subhead"><div><label>Kelengkungan Sudut</label></div></div>
+      <div class="settings-row" style="padding-top:0;">
+        <div class="radio-pill-group">
+          ${Object.entries(RADIUS_PRESETS).map(([k,v])=>`
+            <label class="radio-pill"><input type="radio" name="app-radius" value="${k}" ${APP_THEME.radius===k?"checked":""}> ${v.label}</label>`).join("")}
+        </div>
+      </div>
+      <div class="settings-subhead"><div><label>Kepadatan Tampilan</label><div class="sr-sub">Jarak/padding di kartu &amp; daftar utama</div></div></div>
+      <div class="settings-row" style="padding-top:0;">
+        <div class="radio-pill-group">
+          ${Object.entries(DENSITY_PRESETS).map(([k,v])=>`
+            <label class="radio-pill"><input type="radio" name="app-density" value="${k}" ${APP_THEME.density===k?"checked":""}> ${v.label}</label>`).join("")}
+        </div>
+      </div>
+      <div class="settings-subhead"><div><label>Gaya Kartu</label></div></div>
+      <div class="settings-row" style="padding-top:0;">
+        <div class="radio-pill-group">
+          ${Object.entries(CARD_STYLE_PRESETS).map(([k,v])=>`
+            <label class="radio-pill"><input type="radio" name="app-cardstyle" value="${k}" ${APP_THEME.cardStyle===k?"checked":""}> ${v.label}</label>`).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>Ukuran Font</h4>
+      <div class="settings-row">
+        <div class="radio-pill-group">
+          ${Object.entries(FONT_SIZE_PRESETS).map(([k,v])=>`
+            <label class="radio-pill"><input type="radio" name="app-fontsize" value="${k}" ${APP_THEME.fontSize===k?"checked":""}> ${v.label}</label>`).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>Bahasa Aplikasi</h4>
+      <div class="settings-row" style="opacity:.55;">
+        <div><label>Bahasa</label><div class="sr-sub">Bahasa Indonesia</div></div>
+        <span class="tag-chip">Segera hadir</span>
+      </div>
+    </div>
+  `;
+
+  async function setAppTheme(key, dbKey, value){
+    APP_THEME[key] = value;
+    applyAppTheme();
+    await dbPut("settings", { key: dbKey, value });
+    navigateTo("appsettings");
+  }
+
+  root.querySelectorAll('input[name="app-accent"]').forEach(inp=>{
+    inp.addEventListener("change", ()=> setAppTheme("accent","appAccent",inp.value));
+  });
+  root.querySelector("#app-accent-custom").addEventListener("input", (e)=>{
+    APP_THEME.accent = e.target.value;
+    applyAppTheme();
+  });
+  root.querySelector("#app-accent-custom").addEventListener("change", (e)=>{
+    setAppTheme("accent","appAccent",e.target.value);
+  });
+  root.querySelectorAll('input[name="app-radius"]').forEach(inp=>{
+    inp.addEventListener("change", ()=> setAppTheme("radius","appRadius",inp.value));
+  });
+  root.querySelectorAll('input[name="app-density"]').forEach(inp=>{
+    inp.addEventListener("change", ()=> setAppTheme("density","appDensity",inp.value));
+  });
+  root.querySelectorAll('input[name="app-cardstyle"]').forEach(inp=>{
+    inp.addEventListener("change", ()=> setAppTheme("cardStyle","appCardStyle",inp.value));
+  });
+  root.querySelectorAll('input[name="app-fontsize"]').forEach(inp=>{
+    inp.addEventListener("change", ()=> setAppTheme("fontSize","appFontSize",inp.value));
+  });
+}
+
+
 async function renderKasirPage(root){
   const products = await dbGetAll("products");
   const byBarcode = {}, byKode = {};
@@ -4289,7 +4584,7 @@ async function renderKasirPage(root){
       </div>
       <div class="ks-total-row">
         <span>Total</span>
-        <span id="ks-total" class="num">${fmtIDR(0)}</span>
+        <span id="ks-total" class="num">${fmtIDRHtml(0)}</span>
       </div>
       <button class="btn btn-primary ks-pay-btn" id="ks-pay" disabled>Selesaikan Penjualan</button>
     </div>
@@ -4408,7 +4703,7 @@ async function renderKasirPage(root){
       });
     });
     const total = cart.reduce((a,it)=>a+it.subtotal,0);
-    totalEl.textContent = fmtIDR(total);
+    totalEl.innerHTML = fmtIDRHtml(total);
     payBtn.disabled = cart.length === 0;
   }
 
@@ -4530,6 +4825,7 @@ const PAGE_RENDERERS = {
   reports:     renderReportsPage,
   backup:      renderBackupPage,
   settings:    renderSettingsPage,
+  appsettings: renderAppSettingsPage,
   kasir:       renderKasirPage
 };
 
@@ -4568,15 +4864,15 @@ async function renderDashboard(root){
                       - sumWhere(purchases, p => (p.tanggal||"").slice(0,7) === thisMonth, "total");
 
   const stats = [
-    { label:"Penjualan Hari Ini", value: fmtIDR(salesToday), cls:"" },
-    { label:"Pembelian Hari Ini", value: fmtIDR(purchasesToday), cls:"acc-blue" },
-    { label:"Kas Masuk", value: fmtIDR(kasMasuk), cls:"" },
-    { label:"Kas Keluar", value: fmtIDR(kasKeluar), cls:"acc-red" },
-    { label:"Saldo Kas", value: fmtIDR(saldoKas), cls:"acc-amber" },
-    { label:"Piutang Aktif", value: fmtIDR(piutangAktif), cls:"acc-blue" },
-    { label:"Hutang Aktif", value: fmtIDR(hutangAktif), cls:"acc-red" },
-    { label:"Laba Hari Ini", value: fmtIDR(labaHariIni), cls:"" },
-    { label:"Laba Bulan Ini", value: fmtIDR(labaBulanIni), cls:"acc-amber" }
+    { label:"Penjualan Hari Ini", value: fmtIDRHtml(salesToday), cls:"" },
+    { label:"Pembelian Hari Ini", value: fmtIDRHtml(purchasesToday), cls:"acc-blue" },
+    { label:"Kas Masuk", value: fmtIDRHtml(kasMasuk), cls:"" },
+    { label:"Kas Keluar", value: fmtIDRHtml(kasKeluar), cls:"acc-red" },
+    { label:"Saldo Kas", value: fmtIDRHtml(saldoKas), cls:"acc-amber" },
+    { label:"Piutang Aktif", value: fmtIDRHtml(piutangAktif), cls:"acc-blue" },
+    { label:"Hutang Aktif", value: fmtIDRHtml(hutangAktif), cls:"acc-red" },
+    { label:"Laba Hari Ini", value: fmtIDRHtml(labaHariIni), cls:"" },
+    { label:"Laba Bulan Ini", value: fmtIDRHtml(labaBulanIni), cls:"acc-amber" }
   ];
 
   root.innerHTML = `
@@ -4640,6 +4936,7 @@ async function init(){
     console.error(err);
   }
   await loadCurrencySettings();
+  await loadAppThemeSettings();
   await updateFabMode();
   const startPage = (location.hash || "#dashboard").replace("#","");
   await navigateTo(PAGE_META[startPage] ? startPage : "dashboard");
