@@ -1,6 +1,0 @@
-=== index ===
-HTTP_CODE:200 REDIRECT_URL:
-=== manifest.json ===
-HTTP_CODE:200 CONTENT_TYPE:application/json; charset=utf-8
-=== service-worker.js ===
-HTTP_CODE:200 CONTENT_TYPE:application/javascript; charset=utf-8
