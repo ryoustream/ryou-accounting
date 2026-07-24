@@ -4282,6 +4282,7 @@ async function renderSettingsPage(root){
         <div>
           <label>Kas Awal (Rp)</label>
           <div class="sr-sub">Saldo kas tunai sebelum mulai pakai aplikasi ini</div>
+          <div class="sr-sub" id="cfg-kasAwal-fx" style="font-weight:700;"></div>
         </div>
         <input type="number" id="cfg-kasAwal" min="0" value="${cfg.kasAwal||0}" placeholder="0">
       </div>
@@ -4291,16 +4292,6 @@ async function renderSettingsPage(root){
           <div class="sr-sub">Biasanya tanggal mulai pakai aplikasi</div>
         </div>
         <input type="date" id="cfg-kasAwalTgl" value="${cfg.kasAwalTgl||todayStr()}">
-      </div>
-    </div>
-    <div class="settings-section">
-      <h4>Tampilan</h4>
-      <div class="settings-row">
-        <div><label>Mode Tema</label><div class="sr-sub">Terang / Gelap</div></div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-sm ${document.documentElement.getAttribute("data-theme")==="light"?"btn-primary":""}" id="set-light">☀ Terang</button>
-          <button class="btn btn-sm ${document.documentElement.getAttribute("data-theme")==="dark"?"btn-primary":""}" id="set-dark">☽ Gelap</button>
-        </div>
       </div>
     </div>
     <div class="settings-section">
@@ -4374,9 +4365,9 @@ async function renderSettingsPage(root){
       <div class="about-top">
         <div class="about-logo">RA</div>
         <div>
-          <div class="about-name">Ryou Accounting<span class="about-ver">v2.0-r6</span></div>
+          <div class="about-name">Ryou Accounting<span class="about-ver">v2.1-r8</span></div>
           <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
-          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0200R6</div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0201R8</div>
         </div>
       </div>
       <div class="about-feats">
@@ -4398,6 +4389,15 @@ async function renderSettingsPage(root){
   `;
 
   root.querySelector("#fx-refresh-btn").addEventListener("click", () => fetchLatestFxRates(true));
+
+  function updateKasAwalFxHint(){
+    const hintEl = root.querySelector("#cfg-kasAwal-fx");
+    if(!hintEl) return;
+    const val = Number(root.querySelector("#cfg-kasAwal").value)||0;
+    hintEl.textContent = CURRENT_CURRENCY === "IDR" ? "" : ("≈ " + fmtIDR(val) + " dengan kurs saat ini");
+  }
+  updateKasAwalFxHint();
+  root.querySelector("#cfg-kasAwal").addEventListener("input", updateKasAwalFxHint);
   renderInstallButtonState(root);
   root.querySelector("#install-app-btn").addEventListener("click", triggerInstallPrompt);
 
@@ -4449,8 +4449,6 @@ async function renderSettingsPage(root){
     toast("Pengaturan disimpan.");
     navigateTo("settings");
   });
-  root.querySelector("#set-light").addEventListener("click",()=>{ applyTheme("light"); navigateTo("settings"); });
-  root.querySelector("#set-dark").addEventListener("click",()=>{ applyTheme("dark"); navigateTo("settings"); });
 }
 
 /* ================================================================
@@ -4459,6 +4457,16 @@ async function renderSettingsPage(root){
    ================================================================ */
 async function renderAppSettingsPage(root){
   root.innerHTML = `
+    <div class="settings-section">
+      <h4>Mode Tema</h4>
+      <div class="settings-row">
+        <div><label>Terang / Gelap</label></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm ${document.documentElement.getAttribute("data-theme")==="light"?"btn-primary":""}" id="set-light">☀ Terang</button>
+          <button class="btn btn-sm ${document.documentElement.getAttribute("data-theme")==="dark"?"btn-primary":""}" id="set-dark">☽ Gelap</button>
+        </div>
+      </div>
+    </div>
     <div class="settings-section">
       <h4>Warna Tema</h4>
       <div class="settings-subhead">
@@ -4521,6 +4529,9 @@ async function renderAppSettingsPage(root){
       </div>
     </div>
   `;
+
+  root.querySelector("#set-light").addEventListener("click",()=>{ applyTheme("light"); navigateTo("appsettings"); });
+  root.querySelector("#set-dark").addEventListener("click",()=>{ applyTheme("dark"); navigateTo("appsettings"); });
 
   async function setAppTheme(key, dbKey, value){
     APP_THEME[key] = value;
