@@ -1418,6 +1418,25 @@ function applyAppTheme(){
   root.setProperty("--primary-100", isDark ? hslToHex(h, clampN(s,20,45), 16) : hslToHex(h, clampN(s,15,55), 92));
   root.setProperty("--primary-ink", isDark ? hslToHex(h, clampN(s+5,20,70), 74) : hslToHex(h, s, clampN(l-12,10,88)));
 
+  /* Warna netral (bg/surface/border/text) dark mode ikut hue warna tema —
+     supaya dark mode terasa "senada" apa pun warna aksen yang dipilih,
+     bukan selalu abu-abu kehijauan yang dulu di-hardcode. */
+  if(isDark){
+    root.setProperty("--bg",        hslToHex(h, 13, 7));
+    root.setProperty("--surface",   hslToHex(h, 12, 11));
+    root.setProperty("--surface-2", hslToHex(h, 11, 14));
+    root.setProperty("--border",    hslToHex(h, 10, 18));
+    root.setProperty("--text",      hslToHex(h, 10, 93));
+    root.setProperty("--text-soft", hslToHex(h, 8, 74));
+  }else{
+    root.removeProperty("--bg");
+    root.removeProperty("--surface");
+    root.removeProperty("--surface-2");
+    root.removeProperty("--border");
+    root.removeProperty("--text");
+    root.removeProperty("--text-soft");
+  }
+
   const rad = RADIUS_PRESETS[APP_THEME.radius] || RADIUS_PRESETS.medium;
   root.setProperty("--radius-sm", rad.sm+"px");
   root.setProperty("--radius-md", rad.md+"px");
@@ -4245,19 +4264,6 @@ async function renderSettingsPage(root){
 
   root.innerHTML=`
     <div class="settings-section">
-      <h4>Instalasi Aplikasi</h4>
-      <div class="settings-row" style="align-items:center;">
-        <div>
-          <label>Pasang ke HP / PC</label>
-          <div class="sr-sub" id="install-app-sub">Biar bisa dibuka langsung dari layar utama, tanpa lewat browser.</div>
-        </div>
-        <button type="button" class="fx-refresh-btn" id="install-app-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-          Install
-        </button>
-      </div>
-    </div>
-    <div class="settings-section">
       <h4>Profil Usaha</h4>
       <div class="settings-row">
         <div><label>Nama Toko / Usaha</label><div class="sr-sub">Tampil di nota cetak</div></div>
@@ -4361,31 +4367,6 @@ async function renderSettingsPage(root){
         Simpan Pengaturan
       </button>
     </div>
-    <div class="about-card">
-      <div class="about-top">
-        <div class="about-logo">RA</div>
-        <div>
-          <div class="about-name">Ryou Accounting<span class="about-ver">v2.1-r8</span></div>
-          <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
-          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0201R8</div>
-        </div>
-      </div>
-      <div class="about-feats">
-        <div class="about-feat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
-          <span>Tetap jalan walau internet mati atau sinyal lagi jelek</span>
-        </div>
-        <div class="about-feat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Data tersimpan aman di HP/laptop sendiri, bukan di server orang lain</span>
-        </div>
-        <div class="about-feat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span>Ringan &amp; langsung pakai — buka browser, langsung jalan</span>
-        </div>
-      </div>
-    </div>
-    </div>
   `;
 
   root.querySelector("#fx-refresh-btn").addEventListener("click", () => fetchLatestFxRates(true));
@@ -4398,8 +4379,6 @@ async function renderSettingsPage(root){
   }
   updateKasAwalFxHint();
   root.querySelector("#cfg-kasAwal").addEventListener("input", updateKasAwalFxHint);
-  renderInstallButtonState(root);
-  root.querySelector("#install-app-btn").addEventListener("click", triggerInstallPrompt);
 
   root.querySelector("#cfg-save").addEventListener("click",async()=>{
     await saveSetting("tokoNama",  root.querySelector("#cfg-tokoNama").value.trim());
@@ -4468,6 +4447,19 @@ async function renderAppSettingsPage(root){
       </div>
     </div>
     <div class="settings-section">
+      <h4>Instalasi Aplikasi</h4>
+      <div class="settings-row" style="align-items:center;">
+        <div>
+          <label>Pasang ke HP / PC</label>
+          <div class="sr-sub" id="install-app-sub">Biar bisa dibuka langsung dari layar utama, tanpa lewat browser.</div>
+        </div>
+        <button type="button" class="fx-refresh-btn" id="install-app-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Install
+        </button>
+      </div>
+    </div>
+    <div class="settings-section">
       <h4>Warna Tema</h4>
       <div class="settings-subhead">
         <div><label>Preset Warna</label><div class="sr-sub">Tap salah satu, atau pilih warna custom di bawah</div></div>
@@ -4528,10 +4520,36 @@ async function renderAppSettingsPage(root){
         <span class="tag-chip">Segera hadir</span>
       </div>
     </div>
+    <div class="about-card">
+      <div class="about-top">
+        <div class="about-logo">RA</div>
+        <div>
+          <div class="about-name">Ryou Accounting<span class="about-ver">v2.1-r14</span></div>
+          <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0201R14</div>
+        </div>
+      </div>
+      <div class="about-feats">
+        <div class="about-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+          <span>Tetap jalan walau internet mati atau sinyal lagi jelek</span>
+        </div>
+        <div class="about-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Data tersimpan aman di HP/laptop sendiri, bukan di server orang lain</span>
+        </div>
+        <div class="about-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Ringan &amp; langsung pakai — buka browser, langsung jalan</span>
+        </div>
+      </div>
+    </div>
   `;
 
   root.querySelector("#set-light").addEventListener("click",()=>{ applyTheme("light"); navigateTo("appsettings"); });
   root.querySelector("#set-dark").addEventListener("click",()=>{ applyTheme("dark"); navigateTo("appsettings"); });
+  renderInstallButtonState(root);
+  root.querySelector("#install-app-btn").addEventListener("click", triggerInstallPrompt);
 
   async function setAppTheme(key, dbKey, value){
     APP_THEME[key] = value;
