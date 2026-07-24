@@ -1317,10 +1317,6 @@ function applyTheme(mode){
     const label = document.getElementById("theme-label-"+suf);
     if(label) label.textContent = mode === "dark" ? "Gelap" : "Terang";
   });
-  /* Status bar/address bar PWA ikut warna surface aktif, biar nggak nyala
-     teal terang pas app dibuka dalam mode gelap (khususnya di HP). */
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if(metaTheme) metaTheme.setAttribute("content", mode === "dark" ? "#181f1c" : "#2f6f62");
   localStorage.setItem("ryou_theme", mode);
   applyAppTheme();
 }
@@ -1421,8 +1417,9 @@ function applyAppTheme(){
   /* Warna netral (bg/surface/border/text) dark mode ikut hue warna tema —
      supaya dark mode terasa "senada" apa pun warna aksen yang dipilih,
      bukan selalu abu-abu kehijauan yang dulu di-hardcode. */
+  const darkBg = hslToHex(h, 13, 7);
   if(isDark){
-    root.setProperty("--bg",        hslToHex(h, 13, 7));
+    root.setProperty("--bg",        darkBg);
     root.setProperty("--surface",   hslToHex(h, 12, 11));
     root.setProperty("--surface-2", hslToHex(h, 11, 14));
     root.setProperty("--border",    hslToHex(h, 10, 18));
@@ -1436,6 +1433,11 @@ function applyAppTheme(){
     root.removeProperty("--text");
     root.removeProperty("--text-soft");
   }
+
+  /* Status bar PWA (Android) ikut warna aksen aktif — terang: warna aksen
+     persis, gelap: nada bg gelap yang sudah senada aksen di atas. */
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if(metaTheme) metaTheme.setAttribute("content", isDark ? darkBg : APP_THEME.accent);
 
   const rad = RADIUS_PRESETS[APP_THEME.radius] || RADIUS_PRESETS.medium;
   root.setProperty("--radius-sm", rad.sm+"px");
@@ -4524,9 +4526,9 @@ async function renderAppSettingsPage(root){
       <div class="about-top">
         <div class="about-logo">RA</div>
         <div>
-          <div class="about-name">Ryou Accounting<span class="about-ver">v2.1-r15</span></div>
+          <div class="about-name">Ryou Accounting<span class="about-ver">v2.1-r16</span></div>
           <div class="about-tagline">Kasir &amp; pembukuan ringan buat usaha kamu</div>
-          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0201R15</div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;font-family:monospace;">Build 2607AC0201R16</div>
         </div>
       </div>
       <div class="about-feats">
